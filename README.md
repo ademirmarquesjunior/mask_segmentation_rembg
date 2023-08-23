@@ -11,7 +11,7 @@ Program developed to generate mask images of objects like rock samples and other
   
 Choose the input folder with original images in jpeg format, and choose and or create the output folder where the masks will be saved. Hit "Process masks" to start the mask generation.
 
-<img src="https://github.com/ademirmarquesjunior/mask_segmentation_rembg/blob/main/images/usage.png" width="500" alt="Segmented image">
+<img src="https://github.com/ademirmarquesjunior/mask_segmentation_rembg/blob/main/images/usage.png" width="600" alt="Segmented image">
 
 
 
