@@ -1,4 +1,5 @@
 import os
+from shutil import copyfile
 import sys
 from PIL import Image
 import numpy as np
@@ -6,6 +7,17 @@ import io
 from rembg import remove
 from PyQt5 import uic, QtWidgets, QtCore
 
+
+
+if getattr(sys, 'frozen', False):
+    import pyi_splash
+
+
+home_folder = os.path.expanduser('~')
+
+if os.path.exists(os.path.join(str(home_folder) + '\.u2net')) == False:
+    os.makedirs(os.path.join(str(home_folder) + '\.u2net'))
+    copyfile(os.path.normpath(r'u2net.onnx'), os.path.normpath(home_folder + r'\.u2net\u2net.onnx'))
 
 class Create_mask(QtCore.QThread):
     notifyProgress = QtCore.pyqtSignal(int)
@@ -67,12 +79,13 @@ class Ui(QtWidgets.QMainWindow):
         self.progress_bar_count = 0
         
         self.init_Ui()
+        if getattr(sys, 'frozen', False):
+            pyi_splash.close()
         self.show()
 
 
     def init_Ui(self):
         self.openInputFolder.clicked.connect(lambda: self.open_folder(0))
-
         self.selectOutputFolder.clicked.connect(lambda: self.open_folder(1))
 
         self.create_mask_task = Create_mask(self.input_directory, self.output_path)
@@ -117,6 +130,12 @@ class Ui(QtWidgets.QMainWindow):
     @QtCore.pyqtSlot(int)
     def set_max_progressbar(self, value):
        self.progress_bar_max = value
+       if value == 0:
+            self.openInputFolder.setEnabled(True)
+            self.selectOutputFolder.setEnabled(True)
+            self.alignButton.setEnabled(True)
+            self.statusBar().showMessage("Idle")
+            QtWidgets.QMessageBox.about(self, " ", "No jpg files in the input folder.")
 
 
     def process_images(self):
